@@ -139,6 +139,13 @@ PRODUCT_VENDOR_PROPERTIES += \
 PRODUCT_PACKAGES += \
     fastbootd
 
+# Fingerprint
+PRODUCT_PACKAGES += \
+    android.hardware.biometrics.fingerprint@2.3-service.oplus
+
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml
+
 # FRP
 PRODUCT_VENDOR_PROPERTIES += \
     ro.frp.pst=/dev/block/bootdevice/by-name/frp
@@ -168,6 +175,12 @@ PRODUCT_PACKAGES += \
 # Incremental FS
 PRODUCT_VENDOR_PROPERTIES += \
     ro.incremental.enable=1
+
+# Init scripts
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/rootdir/etc/init.oplus.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/init.oplus.rc \
+    $(LOCAL_PATH)/rootdir/etc/init.target.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.target.rc \
+    $(LOCAL_PATH)/rootdir/etc/ueventd.oplus.rc:$(TARGET_COPY_OUT_ODM)/etc/ueventd.oplus.rc
 
 # Shipping API
 PRODUCT_SHIPPING_API_LEVEL := 33
@@ -204,6 +217,22 @@ PRODUCT_VENDOR_PROPERTIES += \
 
 # NDK
 NEED_AIDL_NDK_PLATFORM_BACKEND := true
+
+# Overlays
+$(call inherit-product, hardware/oplus/overlay/generic/generic.mk)
+$(call inherit-product, hardware/oplus/overlay/qssi/qssi.mk)
+
+DEVICE_PACKAGE_OVERLAYS += \
+    $(LOCAL_PATH)/overlay-aospa
+
+PRODUCT_ENFORCE_RRO_TARGETS := *
+PRODUCT_PACKAGES += \
+    CarrierConfigResCommon \
+    FrameworksResTarget \
+    OPlusFrameworksResCommon \
+    OPlusSettingsResCommon \
+    OPlusSystemUIResCommon \
+    WifiResTarget
 
 # Partitions
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
@@ -259,6 +288,10 @@ PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
     hardware/oplus
 
+# Thermal
+PRODUCT_PACKAGES += \
+    android.hardware.thermal@2.0-service.qti-v2
+
 # USB
 PRODUCT_ODM_PROPERTIES += \
     vendor.usb.use_gadget_hal=0
@@ -275,6 +308,10 @@ PRODUCT_COPY_FILES += \
 # Verified Boot
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.verified_boot.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.verified_boot.xml
+
+# Vendor service manager
+PRODUCT_PACKAGES += \
+    vndservicemanager
 
 # Vibrator
 PRODUCT_PACKAGES += \
